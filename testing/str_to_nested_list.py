@@ -1,3 +1,7 @@
+# This script shows different ways to convert a 9 characters string
+# in a nested list which can be read like a matrix using two indexes
+# for rows and columns
+
 cells = "abcdefghi"
 
 ############################
