@@ -76,7 +76,7 @@ def nested_list_comprehension(c_s, w):
        c   -> single cell
        w   -> array width"""
     print("\nNested list comprehension:")
-    print([[c for c in c_s[i*width:(i+1)*w]] for i in range(w)])
+    print([[c for c in c_s[i*w:(i+1)*w]] for i in range(w)])
 
 
 ############################
