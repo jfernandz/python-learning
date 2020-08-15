@@ -1,21 +1,10 @@
-# This script shows different ways to convert a 9 characters string in a
+# This script shows different ways to convert a string of characters in a
 # nested list which can be read like a matrix using two indexes for rows
-# and columns. The bruteforce is commented because is basically garbage,
-# it's better to do it with enumerate() built-in method/function.
-
-cells = "abcdefghijklmnop"
-width = 4
-
-
-def check_square_array(c_s, w):
-    """c_s -> cells string
-       w   -> width"""
-    if len(c_s) / w != w:
-        print("Cannot create square array")
-        exit()
-
-
-check_square_array(cells, width)
+# and columns.
+#
+# The bruteforce function is the clearest way but basically garbage.
+# I think explicit_for_wo_enumerate() and nested_list_comprehension()
+# the best ways to do this
 
 
 ############################
@@ -23,7 +12,6 @@ check_square_array(cells, width)
 #
 def bruteforce(c_s, w):
     """c_s -> cells string
-       c   -> single cell
        w   -> width
        m   -> final array (matrix)"""
     m = []
@@ -91,5 +79,22 @@ def nested_list_comprehension(c_s, w):
     print([[c for c in c_s[i*width:(i+1)*w]] for i in range(w)])
 
 
-explicit_for_wo_enumerate(cells, width)
-nested_list_comprehension(cells, width)
+############################
+# Main function to check if posible build an
+# square array
+#
+def check_if_square_and_do(c_s, w):
+    """c_s -> cells string
+       w   -> width"""
+    if len(c_s) / w != w:
+        print("Cannot create square array")
+        exit()
+    else:
+        explicit_for_wo_enumerate(c_s, w)
+        nested_list_comprehension(c_s, w)
+
+
+cells = "abcdefghijklmnop"
+width = 4
+
+check_if_square_and_do(cells, width)
