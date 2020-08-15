@@ -7,8 +7,10 @@ cells = "abcdefghijklmnop"
 width = 4
 
 
-def check_square_array(c, w):
-    if len(c) / w != w:
+def check_square_array(c_s, w):
+    """c_s -> cells string
+       w   -> width"""
+    if len(c_s) / w != w:
         print("Cannot create square array")
         exit()
 
