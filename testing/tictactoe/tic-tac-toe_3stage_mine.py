@@ -16,14 +16,23 @@
 def print_field_alt(c_str, w):
     """Function to print the battleground. It is necessary to use
     the join() method because strings are immutable, unlike lists,
-    that's why this funcion is also using list comprehension."""
+    that's why this funcion is also using list comprehension.
+    c_str -> cells string
+    c     -> single cell
+    w     -> array width"""
     print("-" * w ** 2)
-    for i in range(len(c_str), w):
-        print('|' + ''.join([f' {i}' for i in c_str[i:i+w]]) + ' |')
+    for i in range(0, len(c_str), w):
+        ####################
+        # Debug code
+        # print(i)
+        # for c in c_str[i:i+w]:
+        #     print(c)
+        # print([f' {c}' for c in c_str[i:i+w]])
+        print('|' + ''.join([f' {c}' for c in c_str[i:i+w]]) + ' |')
     print("-" * w ** 2)
 
 
-def convert_str_to_array(c_str, w):
+def array(c_str, w):
     """c_str -> cells string
        c     -> single cell
        w     -> array width"""
@@ -35,8 +44,13 @@ def print_field_nlst(c_lst, w):
         print(c_lst[i][i])
 
 
+def check_rows(array):
+    pass
+
+
 def main():
-    cells = str(input("Enter cells: "))
+    cells = "abcdefghi"
+    # cells = str(input("Enter cells: "))
     width = 3
 
     if len(cells) != 9:
@@ -46,7 +60,7 @@ def main():
     # print(format_line(cells))
     # print_field(cells, width)
     print_field_alt(cells, width)
-    print(convert_str_to_array(cells, width))
+    # print(array(cells, width)[2][2])
     # print_field_nlst(convert_str_to_array(cells, width), width)
 
 
