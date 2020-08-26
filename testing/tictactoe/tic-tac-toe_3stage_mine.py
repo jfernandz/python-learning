@@ -68,20 +68,39 @@ def count_chips(array):
 
 
 def check_rows(array):
+    global x_wins, o_wins
     for i in array:
         for k, j in enumerate(i):
             if k + 1 < len(i) and k - 1 >= 0:
                 if i[k] != "_" and i[k] == i[k+1] and i[k] == i[k-1]:
-                    print(f"{i[k]} wins")
-                    exit()
+                    # print(f"{i[k]} wins")
+                    x_or_o(i[k])
 
 
 def traspose(array):
     return list(map(list, zip(*array)))
 
 
+def check_diagonals(array):
+    global x_wins, o_wins
+    if array[0][0] == array[1][1] == array[2][2]:
+        # print(f"{array[0][0]} wins")
+        x_or_o(array[0][0])
+    elif array[0][2] == array[1][1] == array[2][0]:
+        # print(f"{array[0][2]} wins")
+        x_or_o(array[0][2])
+
+
+def x_or_o(chip):
+    global x_wins, o_wins
+    if chip == "X":
+        x_wins = True
+    if chip == "O":
+        o_wins = True
+
+
 def main():
-    cells = "X_OXXXOO_"
+    cells = "XXXX_OX_O"
     # cells = str(input("Enter cells: "))
     width = 3
 
@@ -97,12 +116,25 @@ def main():
     # print_field(cells, width)
     # print_field_alt(cells, width)
     print_field_array(str_to_array(cells, width))
-    print_field_array(traspose(str_to_array(cells, width)))
+    # print_field_array(traspose(str_to_array(cells, width)))
     # print(array(cells, width)[2][2])
     # print_field_nlst(str_to_array(cells, width), width)
     count_chips(str_to_array(cells, width))
-    # check_rows(str_to_array(cells, width))
-    traspose(str_to_array(cells, width))
+    check_rows(str_to_array(cells, width))
+    check_rows(traspose(str_to_array(cells, width)))
+    check_diagonals(str_to_array(cells, width))
 
+
+x_wins = None
+o_wins = None
 
 main()
+
+if x_wins is True and o_wins is True:
+    print("Impossible")
+elif x_wins is True and o_wins is None:
+    print("X wins")
+elif x_wins is None and o_wins is True:
+    print("O wins")
+else:
+    print("Game not finished")
