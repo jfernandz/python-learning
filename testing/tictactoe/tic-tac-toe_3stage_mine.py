@@ -49,7 +49,7 @@ def print_field_array(array):
     print("-"*len(array)**2)
 
 
-def count_chips(array):
+def count_symbols(array):
     x = 0
     o = 0
     blank = 0
@@ -91,11 +91,11 @@ def check_diagonals(array):
         x_or_o(array[0][2])
 
 
-def x_or_o(chip):
+def x_or_o(symbol):
     global x_wins, o_wins
-    if chip == "X":
+    if symbol == "X":
         x_wins = True
-    if chip == "O":
+    if symbol == "O":
         o_wins = True
 
 
@@ -119,7 +119,7 @@ def main():
     # print_field_array(traspose(str_to_array(cells, width)))
     # print(array(cells, width)[2][2])
     # print_field_nlst(str_to_array(cells, width), width)
-    count_chips(str_to_array(cells, width))
+    count_symbols(str_to_array(cells, width))
     check_rows(str_to_array(cells, width))
     check_rows(traspose(str_to_array(cells, width)))
     check_diagonals(str_to_array(cells, width))
