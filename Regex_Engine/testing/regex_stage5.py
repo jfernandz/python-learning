@@ -42,7 +42,7 @@ def match_string(re, string):
 
     # * operator
     if len(re) > 1 and re[1] == "*":
-        if re[2] == string[0]:                          # 1st case
+        if match_char(re[2], string[0]):                # 1st case
             return match_string(re[2:], string)
         elif match_char(re[0], string[0]):              # 2nd case
             return match_string(re, string[1:])
