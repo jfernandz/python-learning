@@ -22,6 +22,8 @@ def match_string(re, string):
     if len(re) == 0:
         # 're' pattern was sliced to the end so this means the 're' pattern
         # WAS found inside 'string'
+        print("'regex' was consumed")
+        print(f"{re}|{string}")
         return True
     elif len(string) == 0:
         # 'string' was sliced to the end so this means the 're' pattern
@@ -31,6 +33,9 @@ def match_string(re, string):
             # character in 're' is "$", which is the special character that
             # points the pattern must be located at the and of the string.
             return True
+        if re[-1] in ("*", "+"):
+            return True
+        print("'string' was consumed")
         return False
 
     # ? operator
@@ -42,7 +47,7 @@ def match_string(re, string):
         return match_string(*asterisk_op(re, string))
 
     # + operator
-    if len(re) > 1 and re[1] == "+":  # and plus_op(re, string) is not False:
+    if len(re) > 1 and re[1] == "+":  # and plus_op(re, string) is not None:
         return match_string(*plus_op(re, string))
 
     if match_char(re[0], string[0]):
@@ -50,7 +55,7 @@ def match_string(re, string):
         # the characters inside 're' patter __recursively__ (by slicing,
         # i.e. incrementing the 're' pattern and the 'string' one position)
         print(f"Main: {re}|{string}")  # Debug
-        print(f"Main-: {re[1:]}|{string[1:]}")  # Important debug
+        print(f"Mai-: {re[1:]}|{string[1:]}")  # Important debug
         return match_string(re[1:], string[1:])
     else:
         # Initial character in 'string' did not match the initial character
@@ -59,8 +64,7 @@ def match_string(re, string):
 
 
 def plus_op(re, string):
-    print(f"Func: {re}|{string}")  # Important debug
-
+    # print(f"Func: {re}|{string}")  # Important debug
     if match_char(re[0], string[0]) and len(string) > 1:
         return re, string[1:]
     else:
@@ -68,19 +72,21 @@ def plus_op(re, string):
 
 
 def asterisk_op(re, string):
-    # print(f"Func: {re}|{string}")  # Important debug
-    if match_char(re[0], string[0]) and len(string) > 1:  # 1st case
-        # print(f"{re}|{string[1:]} --> if")  # Debug
+    print(f"Func: {re}|{string}")  # Important debug
+    if match_char(re[0], string[0]):  # 1st case
+        print(f"if -> {re}|{string[1:]}")  # Debug
         return re, string[1:]
     else:
-        # print(f"{re[2:]}|{string[1:]} --> elif")  # Debug
+        print(f"elif -> {re[2:]}|{string}")  # Debug
         return re[2:], string
 
 
 def question_mark_op(re, string):
-    if match_char(re[0], string[0]) is False:       # 1st case
+    if match_char(re[0], string[0]) is False:   # 1st case
+        print(f"if -> {re[2:]}|{string}")
         return re[2:], string
-    else:                                           # 2nd case
+    else:
+        print(f"el -> {re[2:]}|{string[1:]}")                     # 2nd case
         return re[2:], string[1:]
 
 
