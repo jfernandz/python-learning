@@ -19,6 +19,7 @@ def match_string(re, string):
     a given 'string' character by character using match_char()
     function.
     """
+    print(f"--------> {re}|{string}")
     if len(re) == 0:
         # 're' pattern was sliced to the end so this means the 're' pattern
         # WAS found inside 'string'
@@ -40,54 +41,43 @@ def match_string(re, string):
 
     # ? operator
     if len(re) > 1 and re[1] == "?":
-        return match_string(*question_mark_op(re, string))
+        print(f"?Part: -> {re}|{string}")
+        if match_char(re[0], string[0]):            # 2st case
+            print(f"?if:   -> {re[2:]}|{string[1:]}")
+            return match_string(re[2:], string[1:])
+        else:
+            print(f"?elif: -> {re[2:]}|{string}")   # 1nd case
+            return match_string(re[2:], string)
 
     # * operator
     if len(re) > 1 and re[1] == "*":  # and asterisk_op(re, string) is not None
-        return match_string(*asterisk_op(re, string))
+        print(f"*Part: {re}|{string}")  # Important debug
+        if match_char(re[0], string[0]):  # 1st case
+            print(f"*if:   -> {re}|{string[1:]}")  # Debug
+            return match_string(re, string[1:])
+        else:
+            print(f"*elif: -> {re[2:]}|{string}")  # Debug
+            return match_string(re[2:], string)
 
     # + operator
     if len(re) > 1 and re[1] == "+":  # and plus_op(re, string) is not None:
-        return match_string(*plus_op(re, string))
+        print(f"+Part: -> {re}|{string}")  # Important debug
+        if match_char(re[0], string[0]) and len(string) > 1:
+            return match_string(re, string[1:])
+        else:
+            return match_string(re[2:], string)
 
     if match_char(re[0], string[0]):
         # Initial character matches but it keeps looking for the rest of
         # the characters inside 're' patter __recursively__ (by slicing,
         # i.e. incrementing the 're' pattern and the 'string' one position)
-        print(f"Main: {re}|{string}")  # Debug
-        print(f"Mai-: {re[1:]}|{string[1:]}")  # Important debug
+        print(f"Main:  -> {re}|{string}")  # Debug
+        print(f"Mai-:  -> {re[1:]}|{string[1:]}")  # Important debug
         return match_string(re[1:], string[1:])
     else:
         # Initial character in 'string' did not match the initial character
         # in 're' pattern, so 're' patter WASN'T found.
         return False
-
-
-def plus_op(re, string):
-    # print(f"Func: {re}|{string}")  # Important debug
-    if match_char(re[0], string[0]) and len(string) > 1:
-        return re, string[1:]
-    else:
-        return re[2:], string
-
-
-def asterisk_op(re, string):
-    print(f"Func: {re}|{string}")  # Important debug
-    if match_char(re[0], string[0]):  # 1st case
-        print(f"if -> {re}|{string[1:]}")  # Debug
-        return re, string[1:]
-    else:
-        print(f"elif -> {re[2:]}|{string}")  # Debug
-        return re[2:], string
-
-
-def question_mark_op(re, string):
-    if match_char(re[0], string[0]) is False:   # 1st case
-        print(f"if -> {re[2:]}|{string}")
-        return re[2:], string
-    else:
-        print(f"el -> {re[2:]}|{string[1:]}")                     # 2nd case
-        return re[2:], string[1:]
 
 
 def find_pattern(re, long_str):
@@ -110,7 +100,7 @@ def main_func():
 
     regex, word = input().split("|")
 
-    if len(regex) != 0 and regex[0] == "^":
+    if len(regex) > 1 and regex[0] == "^":
         # Non-empty regex was provided and it starts with "^" special
         # character that points the patter must be located at the
         # beggining of the string, this is why check_string() is
