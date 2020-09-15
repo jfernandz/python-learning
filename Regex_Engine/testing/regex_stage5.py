@@ -35,32 +35,53 @@ def match_string(re, string):
 
     # ? operator
     if len(re) > 1 and re[1] == "?":
-        if match_char(re[0], string[0]) is False:       # 1st case
-            return match_string(re[2:], string)
-        else:                                           # 2nd case
-            return match_string(re[2:], string[1:])
+        return match_string(*question_mark_op(re, string))
 
     # * operator
-    if len(re) > 1 and re[1] == "*":
-        if match_char(re[2], string[0]):                # 1st case
-            return match_string(re[2:], string)
-        elif match_char(re[0], string[0]):              # 2nd case
-            return match_string(re, string[1:])
+    if len(re) > 1 and re[1] == "*":  # and asterisk_op(re, string) is not None
+        return match_string(*asterisk_op(re, string))
 
     # + operator
-    # if len(re) > 1 and re[1] == "+":
-    #    if match_char(re[0], string[0]):
-    #        return match_string(re[2:], string)
+    if len(re) > 1 and re[1] == "+":  # and plus_op(re, string) is not False:
+        return match_string(*plus_op(re, string))
 
     if match_char(re[0], string[0]):
         # Initial character matches but it keeps looking for the rest of
         # the characters inside 're' patter __recursively__ (by slicing,
         # i.e. incrementing the 're' pattern and the 'string' one position)
+        print(f"Main: {re}|{string}")  # Debug
+        print(f"Main-: {re[1:]}|{string[1:]}")  # Important debug
         return match_string(re[1:], string[1:])
     else:
         # Initial character in 'string' did not match the initial character
         # in 're' pattern, so 're' patter WASN'T found.
         return False
+
+
+def plus_op(re, string):
+    print(f"Func: {re}|{string}")  # Important debug
+
+    if match_char(re[0], string[0]) and len(string) > 1:
+        return re, string[1:]
+    else:
+        return re[2:], string
+
+
+def asterisk_op(re, string):
+    # print(f"Func: {re}|{string}")  # Important debug
+    if match_char(re[0], string[0]) and len(string) > 1:  # 1st case
+        # print(f"{re}|{string[1:]} --> if")  # Debug
+        return re, string[1:]
+    else:
+        # print(f"{re[2:]}|{string[1:]} --> elif")  # Debug
+        return re[2:], string
+
+
+def question_mark_op(re, string):
+    if match_char(re[0], string[0]) is False:       # 1st case
+        return re[2:], string
+    else:                                           # 2nd case
+        return re[2:], string[1:]
 
 
 def find_pattern(re, long_str):
