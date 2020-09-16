@@ -33,51 +33,33 @@ def match_string(re, string):
             # The string was consumed but 're' patter wasn't, however last
             # character in 're' is "$", which is the special character that
             # points the pattern must be located at the and of the string.
+            print('Last character in "re" was "$"')
             return True
-        if re[-1] in ("*", "+"):
-            return True
+        if len(re) == 2 and re[-1] in ("*", "?", "+"):
+            print('Last character is "*", "?" or "+"')
+            return match_string(re[2:], string)
         print("'string' was consumed")
         return False
 
-    # ? operator
-    if len(re) > 1 and re[1] == "?":
-        print(f"?Part: -> {re}|{string}")
-        if match_char(re[0], string[0]):            # 2st case
-            print(f"?if:   -> {re[2:]}|{string[1:]}")
-            return match_string(re[2:], string[1:])
-        else:
-            print(f"?elif: -> {re[2:]}|{string}")   # 1nd case
-            return match_string(re[2:], string)
-
-    # * operator
-    if len(re) > 1 and re[1] == "*":  # and asterisk_op(re, string) is not None
-        print(f"*Part: {re}|{string}")  # Important debug
-        if match_char(re[0], string[0]):  # 1st case
-            print(f"*if:   -> {re}|{string[1:]}")  # Debug
-            return match_string(re, string[1:])
-        else:
-            print(f"*elif: -> {re[2:]}|{string}")  # Debug
-            return match_string(re[2:], string)
-
-    # + operator
-    if len(re) > 1 and re[1] == "+":  # and plus_op(re, string) is not None:
-        print(f"+Part: -> {re}|{string}")  # Important debug
-        if match_char(re[0], string[0]) and len(string) > 1:
-            return match_string(re, string[1:])
-        else:
-            return match_string(re[2:], string)
-
     if match_char(re[0], string[0]):
-        # Initial character matches but it keeps looking for the rest of
-        # the characters inside 're' patter __recursively__ (by slicing,
-        # i.e. incrementing the 're' pattern and the 'string' one position)
-        print(f"Main:  -> {re}|{string}")  # Debug
-        print(f"Mai-:  -> {re[1:]}|{string[1:]}")  # Important debug
-        return match_string(re[1:], string[1:])
+        if re[1:].startswith("?"):
+            return match_string(re[2:], string[1:])
+        elif re[1:].startswith("*") or re[1:].startswith("+"):
+            return match_string(re, string[1:])
+        else:
+            # print(f"Main:  -> {re}|{string}")  # Debug
+            # print(f"Mai-:  -> {re[1:]}|{string[1:]}")  # Important debug
+            return match_string(re[1:], string[1:])
     else:
-        # Initial character in 'string' did not match the initial character
-        # in 're' pattern, so 're' patter WASN'T found.
-        return False
+        if re[1:].startswith("?") or re[1:].startswith("*"):
+            return match_string(re[2:], string)
+        # elif re[1:].startswith("+"):
+        #    return match_string(re[2:], string)
+            # print("+False")
+            # return False
+        else:
+            print("uFalse")
+            return False
 
 
 def find_pattern(re, long_str):
@@ -89,6 +71,7 @@ def find_pattern(re, long_str):
         if len(long_str) == 0:
             # long_str was sliced to the end and the 're' pattern
             # WASN'T found inside
+            print("long_str was consumed")
             return False
         else:
             # It keeps looking the pattern recursively inside long_str
