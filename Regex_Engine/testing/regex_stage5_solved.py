@@ -1,3 +1,8 @@
+# IMPORTANT: This solution does not work for
+# ^n.*pe$|nope
+# though the Jetbrain tests doesn't notice it
+
+
 # The most important consideration is that you could compare
 # re[0] with string[0] using match_char() without directly
 # comparing them the way is by comparing re[0] with string[1]
@@ -55,7 +60,7 @@ def match_string(re, string):
         # Here is the important point, he's using string[1] to ensure that
         # re[0] is also the same than string[0] but without doing the
         # explicit match with match_char() because re[0] could be "."
-        print("/"*6 + "> " + f"{re[0]}|{string[0]}|{string[1]}")
+        print("/"*6 + "> " + f"{re[0]}|{string[0]}/{string[1]}")
         if match_char(re[0], string[1]) and match_char(string[0], string[1]):
             return match_string(re, string[1:])
         else:
