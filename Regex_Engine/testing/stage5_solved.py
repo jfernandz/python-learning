@@ -35,7 +35,7 @@ def match_string(re, string):
     a given 'string' character by character using match_char()
     function.
     """
-    print("-"*6 + "> " + f"{re}|{string}")  # Debug
+    # print("-"*6 + "> " + f"{re}|{string}")  # Debug
     if not re:
         # re was consumed so this means the re was found in string
         return True
@@ -60,7 +60,7 @@ def match_string(re, string):
         # Here is the important point, he's using string[1] to ensure that
         # re[0] is also the same than string[0] but without doing the
         # explicit match with match_char() because re[0] could be "."
-        print("/"*6 + "> " + f"{re[0]}|{string[0]}/{string[1]}")
+        # print("/"*6 + "> " + f"{re[0]}|{string[0]}/{string[1]}")
         if match_char(re[0], string[1]) and match_char(string[0], string[1]):
             return match_string(re, string[1:])
         else:
