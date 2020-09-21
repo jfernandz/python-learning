@@ -12,10 +12,20 @@ def match_char(re, char):
 def match_string(re, string, d):
     """Compares strings of the same length. Handles also special
     characters as '?', '*' or '+'"""
+    if d:
+        print("match_string()    >    "
+              + "Initial point, start checking strs :"
+              + f"   '{re}|{string}'")
+
     if re == '' or (re == '$' and string == ''):
         return True
     elif string == '':
         return False
+    elif len(re) > 2 and (
+        (re[2] in "*?+.\\" and re[1] == "\\" and re[2] == string[0]) or
+        (re[1] in "*?+.\\" and re[0] == "\\" and re[1] == string[0])
+            ):
+        return True
     elif len(re) > 1 and re[1] in '*?+':
         if d:
             print("match_string()[if]>    "

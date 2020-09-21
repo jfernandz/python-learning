@@ -13,6 +13,9 @@ def match_string(re, string):
         return True
     elif string == '':
         return False
+    elif len(re) > 1 and re[2] in "*?+." and re[1] == "\\":
+        if re[2] == string[2] and match_string(re[3:], string):
+            return True
     elif len(re) > 1 and re[1] in '*?+':
         if re[1] in '?*' and match_string(re[2:], string):
             return True
