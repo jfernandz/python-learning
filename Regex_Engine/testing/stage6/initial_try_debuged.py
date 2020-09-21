@@ -21,12 +21,12 @@ def match_string(re, string, d):
         return True
     elif string == '':
         return False
-    elif len(re) > 2 and (
-        (re[2] in "*?+.\\" and re[1] == "\\" and re[2] == string[0]) or
-        (re[1] in "*?+.\\" and re[0] == "\\" and re[1] == string[0])
-            ):
+    elif (len(re) > 2 and re[2] in "*?+.\\" and re[1] == "\\"
+          and re[2] == string[0]) or\
+            (len(re) > 1 and re[1] in "*?+.\\" and re[0] == "\\"
+             and re[1] == string[0]):
         return True
-    elif len(re) > 1 and re[1] in '*?+':
+    elif len(re) > 1 and re[1] in '*?+' and re not in "\\":
         if d:
             print("match_string()[if]>    "
                   + "Recursive condition for complex if :"
