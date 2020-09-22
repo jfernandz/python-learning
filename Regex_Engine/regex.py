@@ -1,4 +1,5 @@
 # A debuged version of this script is provided by solved_debuged.py
+# inside testing folder
 
 def match_char(re, char):
     """Compares single characters. Taking into account the '.'
