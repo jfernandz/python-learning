@@ -26,7 +26,7 @@ def match_string(re, string, d):
             (len(re) > 1 and re[1] in "*?+.\\" and re[0] == "\\"
              and re[1] == string[0]):
         return True
-    elif len(re) > 1 and re[1] in '*?+' and re not in "\\":
+    elif len(re) > 1 and re[1] in '*?+' and "\\" not in re:
         if d:
             print("match_string()[if]>    "
                   + "Recursive condition for complex if :"
