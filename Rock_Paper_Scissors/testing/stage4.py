@@ -24,9 +24,13 @@ def read_ratings(user):
 
     rating_file = open('rating.txt', 'r')
 
-    # The warning in pycharm is due I should parse the file first to
+    # The warning in PyCharm is due I should parse the file first to
     # ensure all lines have only two fields
-    rating_dict = dict(line.split() for line in rating_file.readlines())
+    rating_dict = dict(
+        line.split()
+        for line in rating_file.readlines()
+        if len(line.split()) == 2
+    )
 
     if user in rating_dict:
         user_rating = int(rating_dict[user])
@@ -72,7 +76,8 @@ def main_loop():
         elif user_inp == "!rating":
             print(current_user_rating)
             continue
-        elif user_inp in ("!exit", "Bye!"):
+        elif user_inp == "!exit":
+            print("Bye!")
             break
         else:
             print("Invalid input")
