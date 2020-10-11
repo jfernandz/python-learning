@@ -44,7 +44,7 @@ def read_ratings(user):
 def main_loop():
     """Main function, it asks for the users name, greets them, call the
     read_ratings() funtion and contains the main while loop, which is
-    run forever until the user types `!exit` or `!bye` commands
+    run forever until the user types `!exit` command
     """
 
     user_name = input("Enter your name: ")
