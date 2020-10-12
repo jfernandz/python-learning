@@ -25,56 +25,6 @@ def read_ratings(user):
     return user_rating
 
 
-def simple_comparator(user_choice, computer_choice, options):
-    """Compares user and computer option and check who wins
-    """
-
-    counters = {"rock": "paper", "paper": "scissors", "scissors": "rock"}
-
-    if user_choice == counters[computer_choice]:
-        return "win"
-    elif user_choice != computer_choice:
-        return "lose"
-    elif user_choice == computer_choice:
-        return "draw"
-    elif user_choice not in options:
-        return "invalid"
-
-
-def simple_game(opts, curr_usr_rat):
-
-    while True:
-        computer_inp = opts[random.randint(0, len(opts)-1)]
-        user_inp = str(input())
-
-        if user_inp in opts:
-            if simple_comparator(user_inp, computer_inp, opts) == "win":
-                print("Well done. The computer"
-                      + f"choose {computer_inp} and failed")
-                curr_usr_rat += 100
-                continue
-            elif simple_comparator(user_inp, computer_inp, opts) == "draw":
-                print(f"There is a draw ({computer_inp})")
-                curr_usr_rat += 50
-                continue
-            elif simple_comparator(user_inp, computer_inp, opts) == "lose":
-                print(f"Sorry, but the computer chose {computer_inp}")
-                continue
-            elif simple_comparator(user_inp, computer_inp, opts) == "invalid":
-                print("Invalid input")
-                continue
-        elif user_inp == "!rating":
-            print(curr_usr_rat)
-            continue
-        elif user_inp == "!exit":
-            print("Bye!")
-            break
-        else:
-            print("Invalid input")
-
-    exit()
-
-
 def complex_comparator(user_choice, computer_choice, options):
     # The algorithm is basically that we need to remove the user
     # option and the last option in the list must be moved to the
@@ -87,13 +37,14 @@ def complex_comparator(user_choice, computer_choice, options):
     # no_user_opts = options
     # no_user_opts.remove(user_choice)
     # 2 - Create a new list using list comprehensions
-    no_user_opts = [opt for opt in options if opt != user_choice]
+    # no_user_opts = [opt for opt in options if opt != user_choice]
     ########################
 
-    fixed_no_user_opts = no_user_opts[-1:] + no_user_opts[:-1]
+    no_user_opts = options[options.index(user_choice) + 1:] \
+        + options[:options.index(user_choice)]
 
-    user_lose_against = fixed_no_user_opts[:len(fixed_no_user_opts) // 2]
-    user_wins_against = fixed_no_user_opts[len(fixed_no_user_opts) // 2:]
+    user_lose_against = no_user_opts[:len(no_user_opts) // 2]
+    user_wins_against = no_user_opts[len(no_user_opts) // 2:]
 
     if computer_choice in user_wins_against:
         return "win"
@@ -105,15 +56,35 @@ def complex_comparator(user_choice, computer_choice, options):
         return "invalid"
 
 
-def complex_game(opts, curr_usr_rat):
+def check_list(unsorted_opts):
+    comp = ["rock", "gun", "lightning", "devil", "dragon", "water",
+            "air", "paper", "sponge", "wolf", "tree", "human",
+            "snake", "scissors", "fire"]
+
+    mid = ["rock", "spock", "paper", "lizard", "scissors"]
+
+    simp = ["rock", "paper", "scissors"]
+
+    if len(unsorted_opts) == len(comp):
+        return comp
+    elif len(unsorted_opts) == len(mid):
+        return mid
+    elif len(unsorted_opts) == len(simp):
+        return simp
+    else:
+        print("Invalid options list")
+
+
+def game(unsorted_opts, curr_usr_rat):
+
+    opts = check_list(unsorted_opts)
 
     while True:
         computer_inp = opts[random.randint(0, len(opts)-1)]
         user_inp = str(input())
-        complex_comparator(user_inp, computer_inp, opts)
         if user_inp in opts:
             if complex_comparator(user_inp, computer_inp, opts) == "win":
-                print("Well done. The computer"
+                print("Well done. The computer "
                       + f"choose {computer_inp} and failed")
                 curr_usr_rat += 100
                 continue
@@ -149,14 +120,14 @@ def main_func():
 
     current_user_rating = read_ratings(user_name)
 
-    opts = input()
+    user_given_opts = input()
     print("Okay, let's start")
-    if not opts:
-        opts = ["rock", "paper", "scissors"]
-        simple_game(opts, current_user_rating)
+    if not user_given_opts:
+        user_given_opts = ["rock", "paper", "scissors"]
+        game(user_given_opts, current_user_rating)
     else:
-        opts = opts.split(",")
-        complex_game(opts, current_user_rating)
+        user_given_opts = user_given_opts.split(",")
+        game(user_given_opts, current_user_rating)
 
 
 if __name__ == '__main__':
