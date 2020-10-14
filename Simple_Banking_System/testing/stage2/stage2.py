@@ -48,9 +48,11 @@ class Bank:
         and a balance of 0
         """
 
-        bii_raw = random.randrange(0, 10000000000)
-        bii = f'{bii_raw:0>10}'
-        card_number = self.iin + bii
+        bii_raw = random.randrange(0, 1000000000)
+        bii = f'{bii_raw:0>9}'
+        iin_bii = self.iin + bii
+
+        card_number = self.iin + bii + self.luhn_algorithm(iin_bii)
 
         pin_raw = random.randrange(0, 10000)
         card_pin = f'{pin_raw:0>4}'
@@ -66,6 +68,48 @@ class Bank:
             print()
         else:
             self.create_card()
+
+    @staticmethod
+    def luhn_algorithm(iin_bii):
+
+        iin_bii_list = [int(i) for i in iin_bii]
+        for index, _ in enumerate(iin_bii_list):
+            # Remember that for iterable objects first index is 0
+            # and in the luhn algorithm numbers in odd positions
+            # must be multiplied by 2
+            if (index + 1) % 2 == 1:
+                iin_bii_list[index] *= 2
+                if iin_bii_list[index] > 9:
+                    iin_bii_list[index] -= 9
+
+        n = 0
+        while (sum(iin_bii_list) + n) % 10 != 0:
+            n += 1
+
+        return str(n)
+
+    def login(self):
+        """Login method to check if the card number exists and
+        if the given pin is correct, once those credentials are
+        correct, the user goes into the user area
+        """
+
+        print()
+        print("Enter your card number: ")
+        card_number = str(input())
+        print("Enter your card pin: ")
+        card_pin = str(input())
+
+        if card_number not in self.cards \
+                or self.cards[card_number][0] != card_pin:
+            print()
+            print("Wrong card number or PIN!")
+            print()
+            # self.login()
+        elif self.cards[card_number][0] == card_pin:
+            print()
+            print("You have successfully logged in!")
+            self.user_area(card_number)
 
     def user_area(self, card_number):
         """User menu: check the balance, log out or exit
@@ -91,29 +135,6 @@ class Bank:
                 print("You have successfully logged out!")
                 print()
                 break
-
-    def login(self):
-        """Login method to check if the card number exists and
-        if the given pin is correct, once those credencials are
-        correct, the user goes into the user area
-        """
-
-        print()
-        print("Enter your card number: ")
-        card_number = str(input())
-        print("Enter your card pin: ")
-        card_pin = str(input())
-
-        if card_number not in self.cards \
-                or self.cards[card_number][0] != card_pin:
-            print()
-            print("Wrong card number or PIN!")
-            print()
-            # self.login()
-        elif self.cards[card_number][0] == card_pin:
-            print()
-            print("You have successfully logged in!")
-            self.user_area(card_number)
 
 
 if __name__ == '__main__':
