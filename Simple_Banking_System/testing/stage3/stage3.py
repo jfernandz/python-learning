@@ -11,13 +11,19 @@
 # So it's CLEARLY an instance attribute
 
 import random
+import sqlite3
 
 
 class Bank:
 
-    def __init__(self, iin):
+    def __init__(self, iin, db_file):
         self.iin = iin
-        self.cards = {}
+        self.conn = self.create_connection(db_file)
+
+        if self.conn is not None:
+            self.create_table()
+        else:
+            print("Error! Cannot create the database connection.")
 
     def main_loop(self):
         """
@@ -43,22 +49,86 @@ class Bank:
 
         exit()
 
-    def create_card(self):
-        """Creates a new card method, with a random pin
-        and a balance of 0
+    def create_connection(self, db_file):
+
+        conn = None
+        try:
+            conn = sqlite3.connect(db_file)
+            return conn
+        except sqlite3.Error:
+            print(sqlite3.Error)
+
+        return conn
+
+    def create_table(self):
+        create_query = """CREATE TABLE IF NOT EXISTS cards (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            number VARCHAR(16) UNIQUE,
+                            pin VARCHAR(4),
+                            balance INTEGER DEFAULT 0
+                          );"""
+
+        try:
+            cur = self.conn.cursor()
+            cur.execute(create_query)
+        except sqlite3.Error:
+            print(sqlite3.Error)
+
+    def all_cards_list(self):
+
+        cur = self.conn.cursor()
+        cur.execute("SELECT number FROM cards;")
+
+        return list(*zip(*cur.fetchall()))
+
+    def gen_card_number(self):
+        """Generates a random card number
         """
 
         bii_raw = random.randrange(0, 1000000000)
         bii = f'{bii_raw:0>9}'
         iin_bii = self.iin + bii
 
-        card_number = iin_bii + self.luhn_algorithm(iin_bii)
+        return iin_bii + self.luhn_algorithm(iin_bii)
+
+    def gen_unique_card_number(self):
+        """Checks if a particular card number is already in the db
+        """
+        all_cards_list = self.all_cards_list()
+
+        number = self.gen_card_number()
+        if number not in all_cards_list:
+            return number
+        else:
+            return self.gen_unique_card_number()
+
+    def create_card(self):
+        """Creates a new card method, with a random pin
+        and a balance of 0
+        """
+
+        card_number = self.gen_unique_card_number()
 
         pin_raw = random.randrange(0, 10000)
         card_pin = f'{pin_raw:0>4}'
 
-        if card_number not in self.cards:
-            self.cards[card_number] = [card_pin, 0]
+        try:
+            insert_query = """INSERT INTO cards (
+                                number,
+                                pin,
+                                balance
+                               )
+                               VALUES (
+                                :card_number,
+                                :card_pin,
+                                0
+                               );"""
+
+            cur = self.conn.cursor()
+            cur.execute(insert_query,
+                        {"card_number": card_number, "card_pin": card_pin})
+
+            self.conn.commit()
             print()
             print("Your card has been created")
             print("Your card number:")
@@ -66,8 +136,8 @@ class Bank:
             print("Your card pin:")
             print(card_pin)
             print()
-        else:
-            self.create_card()
+        except sqlite3.Error:
+            print(sqlite3.Error)
 
     @staticmethod
     def luhn_algorithm(iin_bii):
@@ -88,6 +158,21 @@ class Bank:
 
         return str(n)
 
+    def fetch_pin(self, card_number):
+
+        cur = self.conn.cursor()
+        fetch_pin_query = """SELECT
+                                pin
+                             FROM
+                                cards
+                            WHERE
+                                number=:card_number
+                            ;"""
+
+        cur.execute(fetch_pin_query, {"card_number": card_number})
+
+        return str(*cur.fetchone())
+
     def login(self):
         """Login method to check if the card number exists and
         if the given pin is correct, once those credentials are
@@ -100,20 +185,35 @@ class Bank:
         print("Enter your card pin: ")
         card_pin = str(input())
 
-        if card_number not in self.cards \
-                or self.cards[card_number][0] != card_pin:
+        all_card_list = self.all_cards_list()
+        # print(self.all_cards_list(), self.fetch_pin(card_number))
+        if card_number in all_card_list \
+                and card_pin == self.fetch_pin(card_number):
+            print()
+            print("You have succesfully logged in!")
+            self.user_area(card_number)
+        else:
             print()
             print("Wrong card number or PIN!")
             print()
-            # self.login()
-        elif self.cards[card_number][0] == card_pin:
-            print()
-            print("You have successfully logged in!")
-            self.user_area(card_number)
+
+    def fetch_balance(self, card_number):
+        cur = self.conn.cursor()
+        balance_query = """SELECT
+                                balance
+                            FROM
+                                cards
+                            WHERE
+                                number=:card_number
+                         ;"""
+
+        cur.execute(balance_query, {"card_number": card_number})
+        return str(*cur.fetchone())
 
     def user_area(self, card_number):
         """User menu: check the balance, log out or exit
         """
+        balance = self.fetch_balance(card_number)
 
         while True:
 
@@ -129,7 +229,7 @@ class Bank:
                 exit()
             elif inp == "1":
                 print()
-                print(f"Balance: {self.cards[card_number][1]}")
+                print(f"Balance: {balance}")
             elif inp == "2":
                 print()
                 print("You have successfully logged out!")
@@ -138,5 +238,5 @@ class Bank:
 
 
 if __name__ == '__main__':
-    bank = Bank(iin='400000')
+    bank = Bank(iin='400000', db_file='card.s3db')
     bank.main_loop()
