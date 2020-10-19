@@ -78,7 +78,7 @@ class Bank:
             # and for this luhn algorithm, the numbers in odd positions
             # must be multiplied by 2, so the first one (1 but 0 index)
             # must be multiplied; so we have to check if (index + 1) % 2 == 1
-            # and when index = 0 -> 1 % 2 = 1, so it will be multiplied
+            # and when index = 0 -> (0 + 1) % 2 = 1, so it will be multiplied
             if (index + 1) % 2 == 1:
                 iin_bii_list[index] *= 2
                 if iin_bii_list[index] > 9:
