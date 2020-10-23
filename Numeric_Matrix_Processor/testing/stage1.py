@@ -1,15 +1,17 @@
 
-def sum_matrices():
-    rows_a, cols_a = map(int, input().split())
-    a = fill_matrix(rows_a, cols_a)
-    rows_b, cols_b = map(int, input().split())
-    b = fill_matrix(rows_b, cols_b)
+def sum_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
 
+    result = []
     if rows_a != rows_b and cols_a != cols_b:
         print("ERROR")
     else:
-        result = []
-    return a, b
+        for row_i, row in enumerate(a):
+            result.append([
+                element + b[row_i][index]
+                for index, element in enumerate(row)
+            ])
+
+    return result
 
 
 def fill_matrix(rows, cols):
@@ -26,6 +28,13 @@ def fill_matrix(rows, cols):
     return matrix
 
 
+def format_output_matrix(matrix):
+    str_matrix = [[str(i) for i in j] for j in matrix]
+
+    for i in str_matrix:
+        print(' '.join(i))
+
+
 class MatrixProcessor:
 
     def __init__(self, operation):
@@ -33,8 +42,24 @@ class MatrixProcessor:
 
     def main_func(self):
 
+        rows_a, cols_a = map(int, input().split())
+        a = fill_matrix(rows_a, cols_a)
+        rows_b, cols_b = map(int, input().split())
+        b = fill_matrix(rows_b, cols_b)
+
         if self.operation == "sum":
-            print(sum_matrices())
+            print()
+            format_output_matrix(
+                sum_matrices(
+                    rows_a,
+                    cols_a,
+                    a,
+                    rows_b,
+                    cols_b,
+                    b
+                )
+            )
+
             # print(*sum_matrices())
 
 
