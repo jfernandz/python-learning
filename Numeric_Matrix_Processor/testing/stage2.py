@@ -4,6 +4,7 @@
 def sum_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
     """Sums two matrices (a and b) given their dimensions
     """
+
     result = []
     if rows_a != rows_b and cols_a != cols_b:
         print("ERROR")
@@ -20,7 +21,26 @@ def sum_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
 def scalar_multiply(matrix, scalar):
     """Multiplies a matrix by a scalar
     """
+
     return [[i*scalar for i in j] for j in matrix]
+
+
+def multiply_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
+    """Multiplies two matrices
+    """
+
+    if cols_a == rows_b:
+        result = []
+        for i, row_a in enumerate(a):
+            for j, element in enumerate(row_a):
+                result.append(j*transpose(b)[i][j])
+
+        return result
+
+
+def transpose(matrix):
+    """Transpose the array to check columns"""
+    return list(map(list, zip(*matrix)))
 
 
 # Auxiliar functions
@@ -29,7 +49,7 @@ def fill_matrix(rows, cols):
     it also checks if a given row has the correct number of elements
     """
 
-    print(str(rows) + "x" + str(cols))
+    # print(str(rows) + "x" + str(cols))
     matrix = []
     for i in range(rows):
         row_i = list(map(int, input().split()))
@@ -37,6 +57,8 @@ def fill_matrix(rows, cols):
             matrix.append(row_i)
         else:
             print("Wrong row elements. Try again from the beginning.")
+            # It's important to use the return statement, so the function
+            # terminates and we avoid a scoping behaviour
             return fill_matrix(rows, cols)
 
     # print("Matrix has been filled")
@@ -48,6 +70,7 @@ def format_output_matrix(matrix):
     """Formats the output, given a matrix it prints according
     its dimension
     """
+
     str_matrix = [[str(i) for i in j] for j in matrix]
 
     for i in str_matrix:
@@ -100,9 +123,33 @@ class MatrixProcessor:
                 )
             )
 
+        if self.operation == "multiply_matrices":
+            # print("Adding up matrices")
+            rows_a, cols_a = map(int, input().split())
+
+            a = fill_matrix(rows_a, cols_a)
+
+            rows_b, cols_b = map(int, input().split())
+
+            b = fill_matrix(rows_b, cols_b)
+
+            print()
+            format_output_matrix(
+                multiply_matrices(
+                    rows_a,
+                    cols_a,
+                    a,
+                    rows_b,
+                    cols_b,
+                    b
+                )
+            )
+
 
 # Declared instances
 sum_operation = MatrixProcessor(operation="sum_matrices")
 # sum_operation.main_func()
 scal_multiply_operation = MatrixProcessor(operation="scalar_multiply")
-scal_multiply_operation.main_func()
+# scal_multiply_operation.main_func()
+matrices_multiply = MatrixProcessor(operation="multiply_matrices")
+matrices_multiply.main_func()
