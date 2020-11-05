@@ -31,9 +31,11 @@ def multiply_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
 
     if cols_a == rows_b:
         result = []
-        for i, row_a in enumerate(a):
-            for j, element in enumerate(row_a):
-                result.append(j*transpose(b)[i][j])
+        aux = 0
+        for i, row_i in enumerate(a):
+            for j, element in enumerate(row_i):
+                aux += element*transpose(b)[i][j]
+            result.append(aux)
 
         return result
 
@@ -151,5 +153,5 @@ sum_operation = MatrixProcessor(operation="sum_matrices")
 # sum_operation.main_func()
 scal_multiply_operation = MatrixProcessor(operation="scalar_multiply")
 # scal_multiply_operation.main_func()
-matrices_multiply = MatrixProcessor(operation="multiply_matrices")
-matrices_multiply.main_func()
+multiply_matrices_op = MatrixProcessor(operation="multiply_matrices")
+multiply_matrices_op.main_func()
