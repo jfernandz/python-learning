@@ -31,13 +31,15 @@ def multiply_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
 
     if cols_a == rows_b:
         result = []
-        aux = 0
-        for i, row_i in enumerate(a):
-            for j, element in enumerate(row_i):
-                aux += element*transpose(b)[i][j]
-            result.append(aux)
+        for ia, row_ia in enumerate(a):
+            result.append([])
+            for row_ib in transpose(b):
+                aux = 0
+                for i, elem_a in enumerate(row_ia):
+                    aux += elem_a*row_ib[i]
+                result[ia].append(aux)
 
-        return result
+    return result
 
 
 def transpose(matrix):
@@ -79,6 +81,15 @@ def format_output_matrix(matrix):
         print(' '.join(i))
 
 
+def input_dimension():
+    try:
+        rows, cols = map(int, input().split())
+        return rows, cols
+    except (TypeError, ValueError):
+        print("You must specify rows x columns.")
+        return input_dimension()
+
+
 # Matrix processor class
 class MatrixProcessor:
 
@@ -89,7 +100,7 @@ class MatrixProcessor:
 
         if self.operation == "sum_matrices":
             # print("Adding up matrices")
-            rows_a, cols_a = map(int, input().split())
+            rows_a, cols_a = input_dimension()
 
             a = fill_matrix(rows_a, cols_a)
 
@@ -127,11 +138,11 @@ class MatrixProcessor:
 
         if self.operation == "multiply_matrices":
             # print("Adding up matrices")
-            rows_a, cols_a = map(int, input().split())
+            rows_a, cols_a = input_dimension()
 
             a = fill_matrix(rows_a, cols_a)
 
-            rows_b, cols_b = map(int, input().split())
+            rows_b, cols_b = input_dimension()
 
             b = fill_matrix(rows_b, cols_b)
 

@@ -9,22 +9,21 @@ def multiply_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
 
     if cols_a == rows_b:
         result = []
-        for row_ia in a:
-            aux = 0
-            for element_a in row_ia:
-                for row_ib in transpose(b):
-                    for element_b in row_ib:
-                        print(element_a, element_b, element_a*element_b)
-                        aux += element_a*element_b
-                        print(aux)
-                print(aux)
-                result.append(aux)
+        for ia, row_ia in enumerate(a):
+            result.append([])
+            for row_ib in transpose(b):
+                aux = 0
+                for i, elem_a in enumerate(row_ia):
+                    aux += elem_a*row_ib[i]
+                result[ia].append(aux)
 
-        return result
+    return result
 
 
 a = [[1, 7], [2, 5]]
 b = [[2, 4], [3, 1]]
+# 1 7  2 4    23 11
+# 2 5  3 1    19 13
 print(a)
-print(transpose(b))
+print(transpose(b), "<", b)
 print(multiply_matrices(2, 2, a, 2, 2, b))
