@@ -38,8 +38,12 @@ def multiply_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
                 for i, elem_a in enumerate(row_ia):
                     aux += elem_a*row_ib[i]
                 result[ia].append(aux)
-
-    return result
+        return result
+    else:
+        print("Numbers of colums in the first matrix must be "
+              + "the same than number of rows in the second matrix.")
+        print("\nRun the program again.")
+        exit()
 
 
 def transpose(matrix):
@@ -84,7 +88,11 @@ def format_output_matrix(matrix):
 def input_dimension():
     try:
         rows, cols = map(int, input().split())
-        return rows, cols
+        if rows == 0 or cols == 0:
+            print("Dimension must be greater than 0, try again.")
+            return input_dimension()
+        else:
+            return rows, cols
     except (TypeError, ValueError):
         print("You must specify rows x columns.")
         return input_dimension()
@@ -104,7 +112,7 @@ class MatrixProcessor:
 
             a = fill_matrix(rows_a, cols_a)
 
-            rows_b, cols_b = map(int, input().split())
+            rows_b, cols_b = input_dimension()
 
             b = fill_matrix(rows_b, cols_b)
 
@@ -122,7 +130,7 @@ class MatrixProcessor:
 
         if self.operation == "scalar_multiply":
             # print("Multiply by scalar")
-            rows, cols = map(int, input().split())
+            rows, cols = input_dimension()
 
             matrix = fill_matrix(rows, cols)
 
