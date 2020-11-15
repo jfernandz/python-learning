@@ -1,5 +1,3 @@
-
-
 # Operation functions
 def sum_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
     """Sums two matrices (a and b) given their dimensions
@@ -7,7 +5,7 @@ def sum_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
 
     result = []
     if rows_a != rows_b and cols_a != cols_b:
-        print("ERROR")
+        print("The operation cannot be performed.")
     else:
         for row_i, row in enumerate(a):
             result.append([
@@ -25,7 +23,7 @@ def scalar_multiply(matrix, scalar):
     return [[i*scalar for i in j] for j in matrix]
 
 
-def multiply_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
+def multiply_matrices(cols_a, a, rows_b, b):
     """Multiplies two matrices
     """
 
@@ -40,9 +38,10 @@ def multiply_matrices(rows_a, cols_a, a, rows_b, cols_b, b):
                 result[ia].append(aux)
         return result
     else:
-        print("Numbers of colums in the first matrix must be "
-              + "the same than number of rows in the second matrix.")
-        print("\nRun the program again.")
+        print("The operation cannot be performed.")
+        # print("Numbers of columns in the first matrix must be "
+        #       + "the same than number of rows in the second matrix.")
+        # print("\nRun the program again.")
         exit()
 
 
@@ -51,7 +50,7 @@ def transpose(matrix):
     return list(map(list, zip(*matrix)))
 
 
-# Auxiliar functions
+# Auxiliary functions
 def fill_matrix(rows, cols):
     """Fills row by row a matrix using first the given dimension,
     it also checks if a given row has the correct number of elements
@@ -60,7 +59,7 @@ def fill_matrix(rows, cols):
     # print(str(rows) + "x" + str(cols))
     matrix = []
     for i in range(rows):
-        row_i = list(map(int, input().split()))
+        row_i = list(map(float, input().split()))
         if len(row_i) == cols:
             matrix.append(row_i)
         else:
@@ -85,17 +84,17 @@ def format_output_matrix(matrix):
         print(' '.join(i))
 
 
-def input_dimension():
+def input_dimension(instructions_str):
     try:
-        rows, cols = map(int, input().split())
+        rows, cols = map(int, input(instructions_str).split())
         if rows == 0 or cols == 0:
             print("Dimension must be greater than 0, try again.")
-            return input_dimension()
+            return input_dimension(instructions_str)
         else:
             return rows, cols
     except (TypeError, ValueError):
         print("You must specify rows x columns.")
-        return input_dimension()
+        return input_dimension(instructions_str)
 
 
 # Matrix processor class
@@ -104,39 +103,59 @@ class MatrixProcessor:
     def __init__(self, operation):
         self.operation = operation
 
-    def main_func(self):
+    def main_selector(self):
 
-        if self.operation == "sum_matrices":
+        if self.operation == "sum_matrices" or\
+                self.operation == "multiply_matrices":
             # print("Adding up matrices")
-            rows_a, cols_a = input_dimension()
+            rows_a, cols_a = input_dimension(
+                "Enter size of first matrix: "
+            )
 
+            print("Enter first matrix:")
             a = fill_matrix(rows_a, cols_a)
 
-            rows_b, cols_b = input_dimension()
+            rows_b, cols_b = input_dimension(
+                "Enter size of second matrix: "
+            )
 
+            print("Enter second matrix:")
             b = fill_matrix(rows_b, cols_b)
 
-            print()
-            format_output_matrix(
-                sum_matrices(
-                    rows_a,
-                    cols_a,
-                    a,
-                    rows_b,
-                    cols_b,
-                    b
+            print("The result is:")
+            if self.operation == "sum_matrices":
+                format_output_matrix(
+                    sum_matrices(
+                        rows_a,
+                        cols_a,
+                        a,
+                        rows_b,
+                        cols_b,
+                        b
+                    )
                 )
-            )
+            elif self.operation == "multiply_matrices":
+                format_output_matrix(
+                    multiply_matrices(
+                        cols_a,
+                        a,
+                        rows_b,
+                        b
+                    )
+                )
 
         if self.operation == "scalar_multiply":
             # print("Multiply by scalar")
-            rows, cols = input_dimension()
+            rows, cols = input_dimension(
+                "Enter size of the matrix: "
+            )
 
+            print("Enter matrix:")
             matrix = fill_matrix(rows, cols)
 
-            scalar = int(input())
+            scalar = float(input("Enter constant: "))
 
-            print()
+            print("The result is:")
             format_output_matrix(
                 scalar_multiply(
                     matrix,
@@ -144,33 +163,25 @@ class MatrixProcessor:
                 )
             )
 
-        if self.operation == "multiply_matrices":
-            # print("Adding up matrices")
-            rows_a, cols_a = input_dimension()
 
-            a = fill_matrix(rows_a, cols_a)
+def main_menu():
+    print("1. Add matrices")
+    print("2. Multiply matrix by a constant")
+    print("3. Multiply matrices")
+    print("0. Exit")
+    choice = int(input("Your choice: "))
 
-            rows_b, cols_b = input_dimension()
-
-            b = fill_matrix(rows_b, cols_b)
-
-            print()
-            format_output_matrix(
-                multiply_matrices(
-                    rows_a,
-                    cols_a,
-                    a,
-                    rows_b,
-                    cols_b,
-                    b
-                )
-            )
+    if choice == 0:
+        exit()
+    elif choice == 1:
+        sum_operation = MatrixProcessor(operation="sum_matrices")
+        sum_operation.main_selector()
+    elif choice == 2:
+        scal_multiply_operation = MatrixProcessor(operation="scalar_multiply")
+        scal_multiply_operation.main_selector()
+    elif choice == 3:
+        multiply_matrices_op = MatrixProcessor(operation="multiply_matrices")
+        multiply_matrices_op.main_selector()
 
 
-# Declared instances
-sum_operation = MatrixProcessor(operation="sum_matrices")
-# sum_operation.main_func()
-scal_multiply_operation = MatrixProcessor(operation="scalar_multiply")
-# scal_multiply_operation.main_func()
-multiply_matrices_op = MatrixProcessor(operation="multiply_matrices")
-multiply_matrices_op.main_func()
+main_menu()
