@@ -165,23 +165,24 @@ class MatrixProcessor:
 
 
 def main_menu():
-    print("1. Add matrices")
-    print("2. Multiply matrix by a constant")
-    print("3. Multiply matrices")
-    print("0. Exit")
-    choice = int(input("Your choice: "))
+    while True:
+        print("1. Add matrices")
+        print("2. Multiply matrix by a constant")
+        print("3. Multiply matrices")
+        print("0. Exit")
+        choice = int(input("Your choice: "))
 
-    if choice == 0:
-        exit()
-    elif choice == 1:
-        sum_operation = MatrixProcessor(operation="sum_matrices")
-        sum_operation.main_selector()
-    elif choice == 2:
-        scal_multiply_operation = MatrixProcessor(operation="scalar_multiply")
-        scal_multiply_operation.main_selector()
-    elif choice == 3:
-        multiply_matrices_op = MatrixProcessor(operation="multiply_matrices")
-        multiply_matrices_op.main_selector()
+        if choice == 0:
+            exit()
+        elif choice == 1:
+            sum_op = MatrixProcessor(operation="sum_matrices")
+            sum_op.main_selector()
+        elif choice == 2:
+            scal_mult_op = MatrixProcessor(operation="scalar_multiply")
+            scal_mult_op.main_selector()
+        elif choice == 3:
+            mult_matrices_op = MatrixProcessor(operation="multiply_matrices")
+            mult_matrices_op.main_selector()
 
 
 main_menu()
