@@ -1,0 +1,5 @@
+= Learning Python repository
+
+This is a personal repo where follow tutorials and courses for learning Python.
+
+The most important one is the JetBrains Academy, but I've got also single examples for testing purposes among other things. 
