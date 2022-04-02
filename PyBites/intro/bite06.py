@@ -1,4 +1,5 @@
 # Intro Bite 06. Strip out vowels and count the number of replacements:
+# https://codechalleng.es/bites/106/
 
 from typing import Tuple, Optional
 import re

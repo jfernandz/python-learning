@@ -1,4 +1,5 @@
-# Intro Bite 05. Slice and dice: 
+# Intro Bite 05. Slice and dice:
+# https://codechalleng.es/bites/105/
 
 from string import ascii_lowercase
 
