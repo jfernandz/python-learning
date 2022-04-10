@@ -26,7 +26,7 @@ def slice_and_dice(text: str = TEXT) -> list:
     text = text.strip()
     for line in text.split("\n"):
         line = line.strip()
-        if line[0] in ascii_lowercase and line[0] == line[0].lower():
+        if line[0] in ascii_lowercase:
             results.append(line.split()[-1].strip(".!"))
 
     return results
